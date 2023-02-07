@@ -1,17 +1,90 @@
 <html>
-
     <head>
         <link rel="icon" type="image/x-icon" href="https://cdn.discordapp.com/attachments/747598678449061992/1072067659446882304/circle_icon_231193.ico">
         <title>discord</title>
+
+        <style>
+            .serverIcon {width:40; height:40; border-radius:30px; flex-grow:0;}
+
+            .hiddenScrollBar::-webkit-scrollbar {display: none;}
+            .hiddenScrollBar {-ms-overflow-style: none; scrollbar-width: none;}
+
+            .flexScroller {overflow-y:auto; flex-shrink:1;}
+        </style>
     </head>
 
-    <body id ="body" style="background-color:#424549;">
-        <div>
-            
+    <body id ="body" style="min-width:800; margin:0; padding:0;">
+        <div id="main" style="height:100%; display:flex; flex-direction:row;">
+            <div id="serverMenu" style="display:flex; flex-direction:column; width:50; height:100%; top:0; left:0;   flex-grow:0; background-color:#282b30;">
+                <div style="width:40; height:40; flex-grow:0; padding:5;">
+                    <div id="directMessages" class="serverIcon" style="background-color:#ffffff;"></div>
+                </div>
+
+                <div id="servers" class="hiddenScrollBar flexScroller" style="width:40; height: 100%; padding:5;">
+                </div>
+
+                <div style="width:40; height:40; flex-grow:0; padding:5;">
+                    <div id="addServer" class="serverIcon" style="background-color:#ffffff;"></div>
+                </div>
+            </div>
+
+            <div id="menu"    style="display:flex; flex-direction:column; min-width:250;   height:100%; top:0; left:50;  flex-grow:0; background-color:#36393e;">
+                <div id="serverName" style="width:100%; height:50;   flex-grow:0;">
+                    <div>
+                    Some Server
+                    </div>
+                </div>
+                <div id="channels"   style="width:100%; height:auto; flex-grow:1;"></div>
+                <div id="userName"   style="display:flex; flex-direction:row; width:100%; height:50;   flex-grow:0;">
+                    <div style="flex-grow:1;">Some User</div>
+                    <div style="width:50; height:50;"></div>
+                </div>
+            </div>
+
+            <div id="content" style="display:flex; flex-direction:column; width:auto;  height:100%; top:0; left:150; flex-grow:1; background-color:#424549;">
+                <div id="channelName" style="width:100%; height:50;   flex-grow:0;"></div>
+                <div id="messages"    style="width:100%; height:auto; flex-grow:1;"></div>
+                <div id="messageBox"  style="width:100%; height:75;   flex-grow:0;"></div>
+            </div>
+
+            <div id="users"  style="display:flex; flex-direction:column;  width:200;   height:100%; top:0; right:0;  flex-grow:0; background-color:#36393e;">
+                <div id="userSearch" style="width:100%; height:50; flex-grow:0;"></div>
+                <div id="usersList"  style="width:100%; height:auto; flex-grow:1;"></div>
+            </div>
         </div>
     </body>
 
     <script>
+        const serverMenu      = document.getElementById("serverMenu");
+        const directMessages  = document.getElementById("directMessages");
+        const servers         = document.getElementById("servers");
+        const addServerButton = document.getElementById("addServer");
+    </script>
+
+    <script>
+        addServerButton.onclick = () => {
+            // bring up addServer menu, ask for database id, then add server based on db id and shared members
+            addServer("blank");
+        };
+
+        function addServer(name) {
+            const server = document.createElement("div");
+            server.id = name;
+            server.className = "serverIcon";
+            server.style = "background-color:#"+Math.floor(Math.random()*16777215).toString(16)+";";
+
+
+            server.onclick = () => {
+                server.parentNode.removeChild(server);
+                serverDivider.parentNode.removeChild(serverDivider);
+            }
+
+            const serverDivider = document.createElement("div");
+            serverDivider.style = "height:5;";
+
+            servers.appendChild(server);
+            servers.appendChild(serverDivider);
+        }
     </script>
 
 </html>
