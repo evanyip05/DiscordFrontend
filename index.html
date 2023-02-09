@@ -13,7 +13,7 @@
         </style>
     </head>
 
-    <body id ="body" style="min-width:800; margin:0; padding:0;">
+    <body id ="body" class="hiddenScrollBar" style="min-width:800; margin:0; padding:0;">
         <div id="main" style="height:100%; display:flex; flex-direction:row;">
             <div id="serverMenu" style="display:flex; flex-direction:column; width:50; height:100%; top:0; left:0;   flex-grow:0; background-color:#282b30;">
                 <div style="width:40; height:40; flex-grow:0; padding:5;">
@@ -64,11 +64,32 @@
     <script src="./sheetsAPI.js"></script>
 
     <script>
+        testXML();
+    
+        async function testXML() {
+            const xhr = new XMLHttpRequest();
+            xhr.open("GET", "https://www.javascripttutorial.net/javascript-fetch-api/");
+            xhr.setRequestHeader("Access-Control-Allow-Origin", "*");
+            xhr.send();
+
+        }
+       
+        async function getScript() {
+            const link = "https://www.howtoinmagento.com/2017/03/google-app-script-how-to-resolve-error.html";
+            const l2 = "https://script.google.com/macros/s/AKfycbzdbIDLsmkJgWIFVzDM-joS86eCzWgEl766Is7ancs_/exec";
+            const response = await fetch(link, {method:"GET", origin:"file:///C:/Users/evany/Documents/programming/Discord/index.html"});
+            ;
+            const raw = (response.status==200)?await response.text():"";
+            console.log(raw);
+        }
+    </script>
+    
+    <script>
         addServerButton.onclick = () => {
             // bring up addServer menu, ask for database id, then add server based on db id and shared members
             addServer("blank");
         };
-
+        
         function addServer(name) {
             const server = document.createElement("div");
             server.id = name;
