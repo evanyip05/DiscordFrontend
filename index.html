@@ -60,24 +60,26 @@
         const directMessages  = document.getElementById("directMessages");
         const servers         = document.getElementById("servers");
         const addServerButton = document.getElementById("addServer");
-        
+        const test            = document.getElementById("test");
         var handledAuth = false;
-    </script>
-
-    <script> 
-        document.getElementById("test").onclick = () => {console.log(getData("1gEhqSyp75XrCDH8fHwVQYD9EeXNpSTAsaN49U4brg8o", "A1"));};
-        
-        async function getData(spreadsheetId, range) {
-            try {const res = await gapi.client.sheets.spreadsheets.values.get({spreadsheetId: spreadsheetId, range: range}); return res.result;}
-            catch (err) {console.log(err.message);return;}
-        }
     </script>
     
     <script>
+        
+        
+        
+        test.onclick = () => {console.log(getData("1gEhqSyp75XrCDH8fHwVQYD9EeXNpSTAsaN49U4brg8o", "A1"));};
+        
         addServerButton.onclick = () => {
             // bring up addServer menu, ask for database id, then add server based on db id and shared members
             addServer("blank");
         };
+        
+        async function getSheet(spreadsheetId, range) {
+            return await gapi.client.sheets;
+            //try {const res = await gapi.client.sheets.spreadsheets.values.get({spreadsheetId: spreadsheetId, range: range}); return res.result;}
+            //catch (err) {console.log(err.message);return;}
+        }
         
         function addServer(name) {
             const server = document.createElement("div");
@@ -139,7 +141,6 @@
             tokenClient.requestAccessToken({prompt: prompt});
             document.getElementById("title").innerText = "discord2";
         }
-        
     </script>
     
     <script async defer src="https://apis.google.com/js/api.js" onload="gapiLoaded()"></script>
