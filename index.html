@@ -2,6 +2,8 @@
     <head>
         <link rel="icon" type="image/x-icon" href="https://cdn.discordapp.com/attachments/747598678449061992/1072067659446882304/circle_icon_231193.ico">
         <title id="title">discord2 (unauthorized)</title>
+        
+        <meta id="intrest-cohortBugfix" http-equiv="Permissions-Policy" content="interest-cohort=()">
 
         <style>
             .serverIcon {width:40; height:40; border-radius:30px; flex-grow:0;}
@@ -44,6 +46,7 @@
             <div id="content" style="display:flex; flex-direction:column; width:auto;  height:100%; top:0; left:150; flex-grow:1; background-color:#424549;">
                 <div id="channelName" style="width:100%; height:50;   flex-grow:0;"></div>
                 <button id="test">test</button>
+                <input id="range"></input>
                 <div id="messages"    style="width:100%; height:auto; flex-grow:1;"></div>
                 <div id="messageBox"  style="width:100%; height:75;   flex-grow:0;"></div>
             </div>
@@ -61,11 +64,15 @@
         const servers         = document.getElementById("servers");
         const addServerButton = document.getElementById("addServer");
         const test            = document.getElementById("test");
+        const input           = document.getElementById("range");
         var handledAuth = false;
     </script>
     
     <script>
-        test.onclick = () => {console.log(getData("1gEhqSyp75XrCDH8fHwVQYD9EeXNpSTAsaN49U4brg8o", "A1"));};
+        test.onclick = async () => {
+            const values = await getData("1gEhqSyp75XrCDH8fHwVQYD9EeXNpSTAsaN49U4brg8o", input.innerText);
+            console.log(values[0]);
+        };
         
         addServerButton.onclick = () => {
             // bring up addServer menu, ask for database id, then add server based on db id and shared members
@@ -74,11 +81,7 @@
         
         async function getData(spreadsheetId, range) {
             const res = await gapi.client.sheets.spreadsheets.values.get({spreadsheetId: spreadsheetId,range: range,});
-            
-            
             return res.result.values;
-            //try {const res = await gapi.client.sheets.spreadsheets.values.get({spreadsheetId: spreadsheetId, range: range}); return res.result;}
-            //catch (err) {console.log(err.message);return;}
         }
         
         function addServer(name) {
