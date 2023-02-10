@@ -45,7 +45,7 @@
 
             <div id="content" style="display:flex; flex-direction:column; width:auto;  height:100%; top:0; left:150; flex-grow:1; background-color:#424549;">
                 <div id="channelName" style="width:100%; height:50;   flex-grow:0;"></div>
-                <div id="sheetsAccess">
+                <div id="sheetsAccess" style="display:flex; flex-direction:column;">
                     <button id="auth">auth</button>
                     <br>
                     <button id="read">read</button>
@@ -69,21 +69,21 @@
         const directMessages  = document.getElementById("directMessages");
         const servers         = document.getElementById("servers");
         const addServerButton = document.getElementById("addServer");
-        const read            = document.getElementById("read");
-        const write           = document.getElementById("write");
+        const readButton      = document.getElementById("read");
+        const writeButton     = document.getElementById("write");
         const input           = document.getElementById("range");
         
         const SPREADSHEET_ID = "1gEhqSyp75XrCDH8fHwVQYD9EeXNpSTAsaN49U4brg8o";
     </script>
     
     <script>
-        read.onclick = async () => {
+        readButton.onclick = async () => {
             const values = await read(SPREADSHEET_ID, input.innerText);
             input.innerText = "";
             console.log(values[0]);
         };
         
-        write.onclick = () => {
+        writeButton.onclick = () => {
             // input ex: "values to put at A1 A1"
             const split = input.innerText.split(" ");
             const range = split[split.length-1];
