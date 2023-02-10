@@ -45,10 +45,12 @@
 
             <div id="content" style="display:flex; flex-direction:column; width:auto;  height:100%; top:0; left:150; flex-grow:1; background-color:#424549;">
                 <div id="channelName" style="width:100%; height:50;   flex-grow:0;"></div>
-                <div id="sheetsAccess" style="display:none;">
+                <div id="sheetsAccess">
                     <button id="auth">auth</button>
+                    <br>
                     <button id="read">read</button>
                     <button id="write">write</button>
+                    <button id="append">append</button>
                     <span contenteditable="true" id="range" style="background-color:#ffffff"></span>
                 </div>
                 <div id="messages"    style="width:100%; height:auto; flex-grow:1;"></div>
@@ -70,24 +72,36 @@
         const read            = document.getElementById("read");
         const write           = document.getElementById("write");
         const input           = document.getElementById("range");
-        var handledAuth = false;
+        
+        const SPREADSHEET_ID = "1gEhqSyp75XrCDH8fHwVQYD9EeXNpSTAsaN49U4brg8o";
     </script>
     
     <script>
         read.onclick = async () => {
-            const values = await readData("1gEhqSyp75XrCDH8fHwVQYD9EeXNpSTAsaN49U4brg8o", input.innerText);
+            const values = await read(SPREADSHEET_ID, input.innerText);
             input.innerText = "";
             console.log(values[0]);
         };
         
         write.onclick = () => {
+            // input ex: "values to put at A1 A1"
             const split = input.innerText.split(" ");
             const range = split[split.length-1];
             split.pop();
             const data = split.join(" ");
             
-            writeData("1gEhqSyp75XrCDH8fHwVQYD9EeXNpSTAsaN49U4brg8o", range, [[data]]);
+            write(SPREADSHEET_ID, range, [[data]]);
             input.innerText = "";
+        };
+        
+        append.onclick = () => {
+            // input ex: "values to put at A1 A1"
+            const split = input.innerText.split(" ");
+            const range = split[split.length-1];
+            split.pop();
+            const data = split.join(" ");
+            
+            append(SPREADSHEET_ID, range, [[data]]);
         };
         
         addServerButton.onclick = () => {
@@ -95,27 +109,25 @@
             addServer("blank");
         };
         
-        async function readData(spreadsheetId, range) {
-            const res = await gapi.client.sheets.spreadsheets.values.get({spreadsheetId: spreadsheetId,range: range,});
+        async function read(spreadsheetId, range) {
+            const res = await gapi.client.sheets.spreadsheets.values.get({spreadsheetId:spreadsheetId, range:range,});
             return res.result.values;
         }
         
-        // values ex: [[value1, value2],[value3, value4]]
-        async function writeData(spreadsheetId, range, values) {
-            try {
-                gapi.client.sheets.spreadsheets.values.update({
-                    spreadsheetId: spreadsheetId,
-                    range: range,
-                    valueInputOption: "RAW",
-                    resource: {values: values},
-                }).then((response) => {
-                    const result = response.result;
-                    console.log("${result.updatedCells} cells updated.");
-                });
-            } catch (err) {
-                console.log(err.message);
-                return;
-            }
+        // ranges is an array ex: [A1:C1, A2, D2] or smth
+        async function batchRead(spreadsheetId, ranges) {
+            const res = await gapi.client.sheets.spreadsheets.values.batchGet({spreadsheetId:spreadsheetId, range:ranges,});
+            return res.result.values;
+        }
+        
+        // range is a single location, value is a single value
+        function write(spreadsheetId, range, value) {
+            gapi.client.sheets.spreadsheets.values.update({spreadsheetId:spreadsheetId, range:range, valueInputOption:"USER_ENTERED", resource:{values: value}});
+        }
+        
+        // range is a single location, value is a single value
+        function append(spreadsheetId, range, value) {
+           gapi.client.sheets.spreadsheets.values.append({spreadsheetId:spreadsheetId, range:range, valueInputOption:"USER_ENTERED", resource:{values: value}});
         }
         
         function addServer(name) {
@@ -137,49 +149,7 @@
             servers.appendChild(serverDivider);
         }
     </script>
-    
-    <script>
-        let tokenClient;
-        let gapiInited = false;
-        let gInited = false;
-       
-        function gapiLoaded() {
-            gapi.load('client', async () => {
-                await gapi.client.init({
-                    apiKey: "AIzaSyAOUjID5aZreP7DmXJjWL0B26Ej6JTu9LI", 
-                    discoveryDocs: ["https://sheets.googleapis.com/$discovery/rest?version=v4"]
-                });
-            });
-            gapiInited = true;
-            tryHandleAuth();
-        }
-        
-        function gLoaded() {
-            tokenClient = google.accounts.oauth2.initTokenClient({
-                client_id: "889192406698-a437s18o4v6hlhlm58gf41hc52tg9i58.apps.googleusercontent.com",
-                scope: "https://www.googleapis.com/auth/spreadsheets",
-                callback: ""
-            });
-            gInited = true;
-            tryHandleAuth();
-        }
-        
-        function tryHandleAuth() {
-            if (gapiInited && gInited) {
-                handleAuth();
-            }
-        }
-                
-        function handleAuth() {
-            tokenClient.callback = async (resp) => {if (resp.error !== undefined) {throw (resp);}}; 
-            tokenClient.requestAccessToken({prompt: "consent"});
-            document.getElementById("title").innerText = "discord2";
-            document.getElementById('sheetsAccess').style = "display:flex; flex-direction:column;";
-        }
-        
-        document.getElementById("auth").onclick = () => {handleAuth();};
-    </script>
-    
+    <script src="./auth"></script>
     <script async defer src="https://apis.google.com/js/api.js" onload="gapiLoaded()"></script>
     <script async defer src="https://accounts.google.com/gsi/client" onload="gLoaded()"></script>
 
