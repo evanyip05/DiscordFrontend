@@ -73,6 +73,7 @@
         const readButton      = document.getElementById("read");
         const batchReadButton = document.getElementById("batchRead");
         const writeButton     = document.getElementById("write");
+        const appendButton    = document.getElementById("append");
         const input           = document.getElementById("range");
         
         const SPREADSHEET_ID = "1gEhqSyp75XrCDH8fHwVQYD9EeXNpSTAsaN49U4brg8o";
@@ -104,7 +105,7 @@
             input.innerText = "";
         };
         
-        append.onclick = () => {
+        appendButton.onclick = () => {
             // input ex: "values to put at A1 A1"
             const split = input.innerText.split(" ");
             const range = split[split.length-1];
