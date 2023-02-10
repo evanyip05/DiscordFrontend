@@ -102,6 +102,7 @@
             const data = split.join(" ");
             
             append(SPREADSHEET_ID, range, [[data]]);
+            input.innerText = "";
         };
         
         addServerButton.onclick = () => {
@@ -110,24 +111,32 @@
         };
         
         async function read(spreadsheetId, range) {
-            const res = await gapi.client.sheets.spreadsheets.values.get({spreadsheetId:spreadsheetId, range:range,});
-            return res.result.values;
+            try {
+                const res = await gapi.client.sheets.spreadsheets.values.get({spreadsheetId:spreadsheetId, range:range,});
+                return res.result.values;
+            } catch (err) {console.log(err.message); return;}
         }
         
         // ranges is an array ex: [A1:C1, A2, D2] or smth
         async function batchRead(spreadsheetId, ranges) {
-            const res = await gapi.client.sheets.spreadsheets.values.batchGet({spreadsheetId:spreadsheetId, range:ranges,});
-            return res.result.values;
+            try { 
+                const res = await gapi.client.sheets.spreadsheets.values.batchGet({spreadsheetId:spreadsheetId, range:ranges,});
+                return res.result.values;
+            } catch (err) {console.log(err.message); return;}
         }
         
         // range is a single location, value is a single value
         function write(spreadsheetId, range, value) {
-            gapi.client.sheets.spreadsheets.values.update({spreadsheetId:spreadsheetId, range:range, valueInputOption:"USER_ENTERED", resource:{values: value}});
+            try { 
+                gapi.client.sheets.spreadsheets.values.update({spreadsheetId:spreadsheetId, range:range, valueInputOption:"USER_ENTERED", resource:{values: value}});
+            } catch (err) {console.log(err.message); return;}
         }
         
         // range is a single location, value is a single value
         function append(spreadsheetId, range, value) {
-           gapi.client.sheets.spreadsheets.values.append({spreadsheetId:spreadsheetId, range:range, valueInputOption:"USER_ENTERED", resource:{values: value}});
+            try {
+                gapi.client.sheets.spreadsheets.values.append({spreadsheetId:spreadsheetId, range:range, valueInputOption:"USER_ENTERED", resource:{values: value}});
+            } catch (err) {console.log(err.message); return;}
         }
         
         function addServer(name) {
