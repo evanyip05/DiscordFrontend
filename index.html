@@ -81,6 +81,7 @@
     
     <script>
         batchReadButton.onclick = async () => {
+            console.log("reading: " + input.innerText.split(" "));
             const values = await batchRead(SPREADSHEET_ID, input.innerText.split(" "));
             input.innerText = "";
             console.log(values);
@@ -142,18 +143,18 @@
         async function write(spreadsheetId, range, value) {
             try { 
                 const res = await gapi.client.sheets.spreadsheets.values.update({spreadsheetId:spreadsheetId, range:range, valueInputOption:"USER_ENTERED", resource:{values: value}});
-                console.log()
-                gapi.client.sheets.spreadsheets.values.update({spreadsheetId:spreadsheetId, range:range, valueInputOption:"USER_ENTERED", resource:{values: value}});
+                console.log(res.resut);
             } catch (err) {console.log(err.message); return;}
         }
         
         // range is a single location, value is a single value
         function append(spreadsheetId, range, value) {
             try {
-                gapi.client.sheets.spreadsheets.values.append({spreadsheetId:spreadsheetId, range:range, valueInputOption:"USER_ENTERED", resource:{values: value}});
+                const res = await gapi.client.sheets.spreadsheets.values.append({spreadsheetId:spreadsheetId, range:range, valueInputOption:"USER_ENTERED", resource:{values: value}});
+                console.log(res.resut);
             } catch (err) {console.log(err.message); return;}
         }
-        
+         
         function addServer(name) {
             const server = document.createElement("div");
             server.id = name;
