@@ -73,14 +73,10 @@
         };
         
         async function getData(spreadsheetId, range) {
-            const res1 = await gapi.client.sheets;
+            const res = await gapi.client.sheets.spreadsheets.values.get({spreadsheetId: spreadsheetId,range: range,});
             
-            console.log(res1);
             
-            return await gapi.client.sheets.spreadsheets.values.get({
-            spreadsheetId: spreadsheetId,
-            range: range,
-          });;
+            return res.result.values;
             //try {const res = await gapi.client.sheets.spreadsheets.values.get({spreadsheetId: spreadsheetId, range: range}); return res.result;}
             //catch (err) {console.log(err.message);return;}
         }
