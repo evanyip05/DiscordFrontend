@@ -68,11 +68,8 @@
         document.getElementById("test").onclick = () => {console.log(getData("1gEhqSyp75XrCDH8fHwVQYD9EeXNpSTAsaN49U4brg8o", "A1"));};
         
         async function getData(spreadsheetId, range) {
-            const response;
-            try {response = await gapi.client.sheets.spreadsheets.values.get({spreadsheetId: spreadsheetId, range: range});}
+            try {const res = await gapi.client.sheets.spreadsheets.values.get({spreadsheetId: spreadsheetId, range: range}); return res.result;}
             catch (err) {console.log(err.message);return;}
-          
-            return response.result;
         }
     </script>
     
@@ -106,13 +103,15 @@
         let gapiInited = false;
         let gInited = false;
         
-        async function gapiLoaded() {
-          gapi.load('client', () => {await gapi.client.init({apiKey: "AIzaSyAOUjID5aZreP7DmXJjWL0B26Ej6JTu9LI"});
+        function gapiLoaded() {
+          gapi.load('client', async () => {await gapi.client.init({apiKey: "AIzaSyAOUjID5aZreP7DmXJjWL0B26Ej6JTu9LI"});});
           gapiInited = true; 
           tryEnableButtons();
         }
         
-        function gisLoaded() {
+        
+        
+        function gLoaded() {
             tokenClient = google.accounts.oauth2.initTokenClient({
               client_id: "889192406698-a437s18o4v6hlhlm58gf41hc52tg9i58.apps.googleusercontent.com",
               scope: "https://www.googleapis.com/auth/spreadsheets",
@@ -123,7 +122,7 @@
         
         function tryEnableButtons() {
             if (gapiInited && gInited) {
-                document.getElementById('authorize_button').style.display = 'block';
+                document.getElementById('test').style.display = 'block';
                 handleAuth();
             }
         }
@@ -135,9 +134,10 @@
             tokenClient.requestAccessToken({prompt: prompt});
             document.getElementById("title").innerText = "discord2";
         }
+        
     </script>
     
-    <script async defer src="https://apis.google.com/js/api.js" onload="gapiLoaded()"></script>
-    <script async defer src="https://accounts.google.com/gsi/client" onload="gisLoaded()"></script>
+    <script id="initGAPI" async defer src="https://apis.google.com/js/api.js" onload="gapiLoaded()"></script>
+    <script id="initGClient" async defer src="https://accounts.google.com/gsi/client" onload="gLoaded()"></script>
 
 </html>
