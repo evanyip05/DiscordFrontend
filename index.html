@@ -118,7 +118,7 @@
         function gLoaded() {
             tokenClient = google.accounts.oauth2.initTokenClient({
               client_id: "889192406698-a437s18o4v6hlhlm58gf41hc52tg9i58.apps.googleusercontent.com",
-              scope: "https://www.googleapis.com/auth/spreadsheets",
+              scope: "https://www.googleapis.com/auth/spreadsheets.readonly"
             });
             gInited = true;
             tryEnableButtons();
