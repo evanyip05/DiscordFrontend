@@ -148,7 +148,7 @@
         }
         
         // range is a single location, value is a single value
-        function append(spreadsheetId, range, value) {
+        async function append(spreadsheetId, range, value) {
             try {
                 const res = await gapi.client.sheets.spreadsheets.values.append({spreadsheetId:spreadsheetId, range:range, valueInputOption:"USER_ENTERED", resource:{values: value}});
                 console.log(res.resut);
