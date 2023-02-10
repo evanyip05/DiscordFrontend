@@ -107,7 +107,7 @@
         };
         
         appendButton.onclick = () => {
-            // input ex: "values to put at A1 A1"
+            // input ex: "values to put at next open slot in col A A"
             const split = input.innerText.split(" ");
             const range = split[split.length-1];
             split.pop();
@@ -148,11 +148,21 @@
         }
         
         // range is a single location, value is a single value
-        async function append(spreadsheetId, range, value) {
+        async function append(spreadsheetId, columnName, value) {
             try {
-                const res = await gapi.client.sheets.spreadsheets.values.append({spreadsheetId:spreadsheetId, range:range, valueInputOption:"USER_ENTERED", resource:{values: value}});
-                console.log(res.resut);
+                console.log(getNextOpenCellInCol(spreadsheetId, columnName));
             } catch (err) {console.log(err.message); return;}
+        }
+        
+        function getNextOpenCellInCol(spreadsheetId, columnName) {
+            let row = 0;
+            while(true) {
+                try {
+                    read(spreadsheetId, columnName+":"+row)
+                } catch (err) {break;}
+                ++row;
+            }
+            return columnName+":"+row;
         }
          
         function addServer(name) {
