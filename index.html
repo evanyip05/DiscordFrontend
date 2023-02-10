@@ -130,7 +130,8 @@
                 
         function handleAuth() {
             tokenClient.callback = async (resp) => {if (resp.error !== undefined) {throw (resp);}}; 
-            const prompt = (gapi.client.getToken() === null)?"consent":"";
+            const token = gapi.client.getToken();
+            const prompt = (token !== undefined || token !== null)?"consent":"";
             tokenClient.requestAccessToken({prompt: prompt});
             document.getElementById("title").innerText = "discord2";
         }
