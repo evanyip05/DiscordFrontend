@@ -81,7 +81,7 @@
         };
         
         write.onclick = () => {
-            updateValues("1gEhqSyp75XrCDH8fHwVQYD9EeXNpSTAsaN49U4brg8o", "A1", [[input.innerText]]);
+            writeData("1gEhqSyp75XrCDH8fHwVQYD9EeXNpSTAsaN49U4brg8o", "A1", [[input.innerText]]);
             input.innerText = "";
         };
         
@@ -106,25 +106,6 @@
                 }).then((response) => {
                     const result = response.result;
                     console.log("${result.updatedCells} cells updated.");
-                });
-            } catch (err) {
-                console.log(err.message);
-                return;
-            }
-        }
-        
-        function updateValues(spreadsheetId, value) {
-  
-            const body = {values: [[value]],};
-            try {
-                gapi.client.sheets.spreadsheets.values.update({
-                    spreadsheetId: spreadsheetId,
-                    range: "A1",
-                    valueInputOption: "USER_ENTERED",
-                    resource: body,
-                }).then((response) => {
-                    const result = response.result;
-                    console.log(`${result.updatedCells} cells updated.`);
                 });
             } catch (err) {
                 console.log(err.message);
