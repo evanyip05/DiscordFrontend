@@ -77,7 +77,7 @@
             
             console.log(res1);
             
-            return await response = await gapi.client.sheets.spreadsheets.values.get({
+            return await gapi.client.sheets.spreadsheets.values.get({
             spreadsheetId: spreadsheetId,
             range: range,
           });;
