@@ -103,14 +103,18 @@
         let tokenClient;
         let gapiInited = false;
         let gInited = false;
-        
+       
         function gapiLoaded() {
-          gapi.load('client', async () => {await gapi.client.init({apiKey: "AIzaSyAOUjID5aZreP7DmXJjWL0B26Ej6JTu9LI"});});
-          gapiInited = true; 
-          tryEnableButtons();
+            gapi.load('client', initializeGapiClient);
         }
-        
-        
+
+        async function initializeGapiClient() {
+            await gapi.client.init({
+                apiKey: "AIzaSyAOUjID5aZreP7DmXJjWL0B26Ej6JTu9LI",
+            });
+            gapiInited = true;
+            tryEnableButtons();
+        }
         
         function gLoaded() {
             tokenClient = google.accounts.oauth2.initTokenClient({
@@ -131,14 +135,14 @@
         function handleAuth() {
             tokenClient.callback = async (resp) => {if (resp.error !== undefined) {throw (resp);}}; 
             const token = gapi.client.getToken();
-            const prompt = (token !== undefined || token !== null)?"consent":"";
+            const prompt = (token === null)?"consent":"";
             tokenClient.requestAccessToken({prompt: prompt});
             document.getElementById("title").innerText = "discord2";
         }
         
     </script>
     
-    <script id="initGAPI" async defer src="https://apis.google.com/js/api.js" onload="gapiLoaded()"></script>
-    <script id="initGClient" async defer src="https://accounts.google.com/gsi/client" onload="gLoaded()"></script>
+    <script async defer src="https://apis.google.com/js/api.js" onload="gapiLoaded()"></script>
+    <script async defer src="https://accounts.google.com/gsi/client" onload="gLoaded()"></script>
 
 </html>
