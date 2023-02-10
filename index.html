@@ -45,9 +45,11 @@
 
             <div id="content" style="display:flex; flex-direction:column; width:auto;  height:100%; top:0; left:150; flex-grow:1; background-color:#424549;">
                 <div id="channelName" style="width:100%; height:50;   flex-grow:0;"></div>
-                <button id="read">read</button>
-                <button id="write">write</button>
-                <span contenteditable="true" id="range" style="background-color:#ffffff"></span>
+                <div id="sheetsAccess" style="display:none;">
+                    <button id="read">read</button>
+                    <button id="write">write</button>
+                    <span contenteditable="true" id="range" style="background-color:#ffffff"></span>
+                </div>
                 <div id="messages"    style="width:100%; height:auto; flex-grow:1;"></div>
                 <div id="messageBox"  style="width:100%; height:75;   flex-grow:0;"></div>
             </div>
@@ -143,7 +145,7 @@
                 });
             });
             gapiInited = true;
-            tryEnableButtons();
+            tryHandleAuth();
         }
         
         function gLoaded() {
@@ -153,12 +155,11 @@
                 callback: ""
             });
             gInited = true;
-            tryEnableButtons();
+            tryHandleAuth();
         }
         
-        function tryEnableButtons() {
+        function tryHandleAuth() {
             if (gapiInited && gInited) {
-                document.getElementById('test').style.display = 'block';
                 handleAuth();
             }
         }
@@ -167,6 +168,7 @@
             tokenClient.callback = async (resp) => {if (resp.error !== undefined) {throw (resp);}}; 
             tokenClient.requestAccessToken({prompt: "consent"});
             document.getElementById("title").innerText = "discord2";
+            document.getElementById('sheetsAccess').style.display = 'block';
         }
     </script>
     
