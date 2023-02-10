@@ -156,8 +156,10 @@
         
         function getNextOpenCellInCol(spreadsheetId, columnName) {
             let row = 0;
-            while(true) {
-                if (typeof read(spreadsheetId, columnName+":"+row) === 'object') {break;}    
+            while(row < 1000) {
+                const res = read(spreadsheetId, columnName+":"+row);
+                console.log(res);
+                if (res.error === 'undefined') {break;}    
                 ++row;
             }
             return columnName+":"+row;
