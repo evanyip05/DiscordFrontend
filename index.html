@@ -128,7 +128,7 @@
             try {
                 const res = await gapi.client.sheets.spreadsheets.values.get({spreadsheetId:spreadsheetId, range:range,});
                 return res.result.values;
-            } catch (err) {console.log(err.message); return;}
+            } catch (err) {console.log(err.message); return {error:"noVal"};}
         }
         
         // ranges is an array ex: [A1:C1, A2, D2] or smth
@@ -157,9 +157,7 @@
         function getNextOpenCellInCol(spreadsheetId, columnName) {
             let row = 0;
             while(true) {
-                try {
-                    read(spreadsheetId, columnName+":"+row)
-                } catch (err) {break;}
+                if (typeof read(spreadsheetId, columnName+":"+row) === 'object') {break;}    
                 ++row;
             }
             return columnName+":"+row;
