@@ -49,6 +49,7 @@
                     <button id="auth">auth</button>
                     <br>
                     <button id="read">read</button>
+                    <button id="batchRead">batch read</button>
                     <button id="write">write</button>
                     <button id="append">append</button>
                     <span contenteditable="true" id="range" style="background-color:#ffffff"></span>
@@ -70,6 +71,7 @@
         const servers         = document.getElementById("servers");
         const addServerButton = document.getElementById("addServer");
         const readButton      = document.getElementById("read");
+        const batchReadButton = document.getElementById("batchRead");
         const writeButton     = document.getElementById("write");
         const input           = document.getElementById("range");
         
@@ -77,6 +79,12 @@
     </script>
     
     <script>
+        batchReadButton.onclick = async () => {
+            const values = await batchRead(SPREADSHEET_ID, input.innerText.split(" "));
+            input.innerText = "";
+            console.log(values);
+        };
+        
         readButton.onclick = async () => {
             const values = await read(SPREADSHEET_ID, input.innerText);
             input.innerText = "";
@@ -90,6 +98,8 @@
             split.pop();
             const data = split.join(" ");
             
+            console.log("writing: " +data+ " -> " + range);
+            
             write(SPREADSHEET_ID, range, [[data]]);
             input.innerText = "";
         };
@@ -101,6 +111,8 @@
             split.pop();
             const data = split.join(" ");
             
+            console.log("appending: " +data+ " -> " + range);
+
             append(SPREADSHEET_ID, range, [[data]]);
             input.innerText = "";
         };
@@ -126,8 +138,10 @@
         }
         
         // range is a single location, value is a single value
-        function write(spreadsheetId, range, value) {
+        async function write(spreadsheetId, range, value) {
             try { 
+                const res = await gapi.client.sheets.spreadsheets.values.update({spreadsheetId:spreadsheetId, range:range, valueInputOption:"USER_ENTERED", resource:{values: value}});
+                console.log()
                 gapi.client.sheets.spreadsheets.values.update({spreadsheetId:spreadsheetId, range:range, valueInputOption:"USER_ENTERED", resource:{values: value}});
             } catch (err) {console.log(err.message); return;}
         }
