@@ -100,6 +100,7 @@
     </script>
     
     <script>
+        let tokenClient;
         let gapiInited = false;
         let gInited = false;
         
@@ -128,7 +129,6 @@
         }
                 
         function handleAuth() {
-            let tokenClient;
             tokenClient.callback = async (resp) => {if (resp.error !== undefined) {throw (resp);}}; 
             const prompt = (gapi.client.getToken() === null)?"consent":"";
             tokenClient.requestAccessToken({prompt: prompt});
