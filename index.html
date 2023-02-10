@@ -136,8 +136,7 @@
                 
         function handleAuth() {
             tokenClient.callback = async (resp) => {if (resp.error !== undefined) {throw (resp);}}; 
-            const prompt = (gapi.client.getToken() === null)?"consent":"";
-            tokenClient.requestAccessToken({prompt: prompt});
+            tokenClient.requestAccessToken({prompt: "consent"});
             document.getElementById("title").innerText = "discord2";
         }
     </script>
