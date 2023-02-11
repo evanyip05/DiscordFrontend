@@ -49,7 +49,6 @@
                     <button id="auth">auth</button>
                     <br>
                     <button id="read">read</button>
-                    <button id="batchRead">batch read</button>
                     <button id="write">write</button>
                     <button id="append">append</button>
                     <span contenteditable="true" id="range" style="background-color:#ffffff"></span>
@@ -71,7 +70,6 @@
         const servers         = document.getElementById("servers");
         const addServerButton = document.getElementById("addServer");
         const readButton      = document.getElementById("read");
-        const batchReadButton = document.getElementById("batchRead");
         const writeButton     = document.getElementById("write");
         const appendButton    = document.getElementById("append");
         const input           = document.getElementById("range");
@@ -80,13 +78,6 @@
     </script>
     
     <script>
-        batchReadButton.onclick = async () => {
-            console.log("reading: " + input.innerText.split(" "));
-            const values = await batchRead(SPREADSHEET_ID, input.innerText.split(" "));
-            input.innerText = "";
-            console.log(values);
-        };
-        
         readButton.onclick = async () => {
             const values = await read(SPREADSHEET_ID, input.innerText);
             input.innerText = "";
@@ -131,39 +122,25 @@
             } catch (err) {console.log(err.message); return;}
         }
         
-        // ranges is an array ex: [A1:C1, A2, D2] or smth
-        async function batchRead(spreadsheetId, ranges) {
-            try { 
-                const res = await gapi.client.sheets.spreadsheets.values.batchGet({spreadsheetId:spreadsheetId, range:ranges,});
-                return res.result.values;
-            } catch (err) {console.log(err.message); return;}
-        }
-        
         // range is a single location, value is a single value
         async function write(spreadsheetId, range, value) {
-            try { 
-                await gapi.client.sheets.spreadsheets.values.update({spreadsheetId:spreadsheetId, range:range, valueInputOption:"USER_ENTERED", resource:{values: value}});
-            } catch (err) {console.log(err.message); return;}
+            try {await gapi.client.sheets.spreadsheets.values.update({spreadsheetId:spreadsheetId, range:range, valueInputOption:"USER_ENTERED", resource:{values: value}});} 
+            catch (err) {console.log(err.message); return;}
         }
         
         // range is a single location, value is a single value
         async function append(spreadsheetId, columnName, value) {
-            try {
-                const openCell = await getNextOpenCellInCol(spreadsheetId, columnName);
-                write(spreadsheetId, openCell, value);
-            } catch (err) {console.log(err.message); return;}
+            try {write(spreadsheetId, await getNextOpenCellInCol(spreadsheetId, columnName), value);} 
+            catch (err) {console.log(err.message); return;}
         }
         
         async function getNextOpenCellInCol(spreadsheetId, columnName) {
             let row = 1;
-            let found = false;
-            while(!found) {
+            while(true) {
                 const res = await read(spreadsheetId, ""+columnName+row);
-                if (typeof res === 'undefined') {found=true;}    
+                if (typeof res === 'undefined') {return ""+columnName+row;}    
                 ++row;
-            }
-            --row;
-            return ""+columnName+row;
+            }            
         }
          
         function addServer(name) {
@@ -171,7 +148,6 @@
             server.id = name;
             server.className = "serverIcon";
             server.style = "background-color:#"+Math.floor(Math.random()*16777215).toString(16)+";";
-
 
             server.onclick = () => {
                 server.parentNode.removeChild(server);
