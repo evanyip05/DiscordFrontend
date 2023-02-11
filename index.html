@@ -156,13 +156,12 @@
         
         async function getNextOpenCellInCol(spreadsheetId, columnName) {
             let row = 0;
-            while(row < 1000) {
+            while(true) {
                 const res = await read(spreadsheetId, columnName+":"+row);
                 console.log(res);
-                if (res === 'undefined') {break;}    
+                if (res.error === 'noVal') {return columnName+":"+row;}    
                 ++row;
             }
-            return columnName+":"+row;
         }
          
         function addServer(name) {
