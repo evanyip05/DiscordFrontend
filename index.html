@@ -124,10 +124,6 @@
             addServer("blank");
         };
         
-        function undefTest() {
-            return;   
-        }
-        
         async function read(spreadsheetId, range) {
             try {
                 const res = await gapi.client.sheets.spreadsheets.values.get({spreadsheetId:spreadsheetId, range:range,});
@@ -153,7 +149,9 @@
         // range is a single location, value is a single value
         async function append(spreadsheetId, columnName, value) {
             try {
-                write(spreadsheetId, getNextOpenCellInCol(spreadsheetId, columnName), value);
+                console.log(getNextOpenCellInCol(spreadsheetId, columnName))
+                console.log(await getNextOpenCellInCol(spreadsheetId, columnName))
+                //write(spreadsheetId, getNextOpenCellInCol(spreadsheetId, columnName), value);
             } catch (err) {console.log(err.message); return;}
         }
         
