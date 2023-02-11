@@ -124,12 +124,15 @@
             addServer("blank");
         };
         
+        function undefTest() {
+            return;   
+        }
+        
         async function read(spreadsheetId, range) {
             try {
                 const res = await gapi.client.sheets.spreadsheets.values.get({spreadsheetId:spreadsheetId, range:range,});
-                const val = res.result.values;
-                return (val==="undefined")?{error:"noVal"}:val;
-            } catch (err) {console.log(err.message); return {error:"noVal"};}
+                return res.result.values;
+            } catch (err) {console.log(err.message); return;}
         }
         
         // ranges is an array ex: [A1:C1, A2, D2] or smth
@@ -151,7 +154,7 @@
         async function append(spreadsheetId, columnName, value) {
             try {
                 //write(spreadsheetId, getNextOpenCellInCol(spreadsheetId, columnName), value);
-                console.log(getNextOpenCellInCol(spreadsheetId, columnName));
+                console.log(await getNextOpenCellInCol(spreadsheetId, columnName));
             } catch (err) {console.log(err.message); return;}
         }
         
@@ -159,7 +162,7 @@
             let row = 1;
             while(true) {
                 const res = await read(spreadsheetId, ""+columnName+row);
-                if (res.error === 'noVal') {return ""+columnName+row;}    
+                if (res === 'undefined') {return ""+columnName+row;}    
                 ++row;
             }
         }
