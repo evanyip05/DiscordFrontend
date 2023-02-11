@@ -127,7 +127,8 @@
         async function read(spreadsheetId, range) {
             try {
                 const res = await gapi.client.sheets.spreadsheets.values.get({spreadsheetId:spreadsheetId, range:range,});
-                return res.result.values;
+                const val = res.result.values;
+                return (val==="undefined")?{error:"noVal"}:val;
             } catch (err) {console.log(err.message); return {error:"noVal"};}
         }
         
