@@ -153,8 +153,7 @@
         // range is a single location, value is a single value
         async function append(spreadsheetId, columnName, value) {
             try {
-                //write(spreadsheetId, getNextOpenCellInCol(spreadsheetId, columnName), value);
-                console.log(await getNextOpenCellInCol(spreadsheetId, columnName));
+                write(spreadsheetId, getNextOpenCellInCol(spreadsheetId, columnName), value);
             } catch (err) {console.log(err.message); return;}
         }
         
@@ -163,7 +162,6 @@
             let found = false;
             while(!found) {
                 const res = await read(spreadsheetId, ""+columnName+row);
-                console.log(res);
                 if (typeof res === 'undefined') {found=true;}    
                 ++row;
             }
