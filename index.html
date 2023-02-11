@@ -142,23 +142,22 @@
         // range is a single location, value is a single value
         async function write(spreadsheetId, range, value) {
             try { 
-                const res = await gapi.client.sheets.spreadsheets.values.update({spreadsheetId:spreadsheetId, range:range, valueInputOption:"USER_ENTERED", resource:{values: value}});
-                console.log(res.resut);
+                await gapi.client.sheets.spreadsheets.values.update({spreadsheetId:spreadsheetId, range:range, valueInputOption:"USER_ENTERED", resource:{values: value}});
             } catch (err) {console.log(err.message); return;}
         }
         
         // range is a single location, value is a single value
         async function append(spreadsheetId, columnName, value) {
             try {
-                write(spreadsheetId, getNextOpenCellInCol(spreadsheetId, columnName), value);
+                //write(spreadsheetId, getNextOpenCellInCol(spreadsheetId, columnName), value);
+                console.log(getNextOpenCellInCol(spreadsheetId, columnName));
             } catch (err) {console.log(err.message); return;}
         }
         
         async function getNextOpenCellInCol(spreadsheetId, columnName) {
             let row = 0;
             while(true) {
-                const res = await read(spreadsheetId, columnName+":"+row);
-                console.log(res);
+                const res = await read(spreadsheetId, ""+columnName+row);
                 if (res.error === 'noVal') {return ""+columnName+row;}    
                 ++row;
             }
