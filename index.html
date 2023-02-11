@@ -154,12 +154,12 @@
             } catch (err) {console.log(err.message); return;}
         }
         
-        function getNextOpenCellInCol(spreadsheetId, columnName) {
+        async function getNextOpenCellInCol(spreadsheetId, columnName) {
             let row = 0;
             while(row < 1000) {
-                const res = read(spreadsheetId, columnName+":"+row);
+                const res = await read(spreadsheetId, columnName+":"+row);
                 console.log(res);
-                if (res.error === 'undefined') {break;}    
+                if (res === 'undefined') {break;}    
                 ++row;
             }
             return columnName+":"+row;
