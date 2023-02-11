@@ -16,7 +16,7 @@ function gapiLoaded() {
 function gLoaded() {
     tokenClient = google.accounts.oauth2.initTokenClient({
         client_id: "889192406698-a437s18o4v6hlhlm58gf41hc52tg9i58.apps.googleusercontent.com",
-        scope: "https://www.googleapis.com/auth/spreadsheets / https://www.googleapis.com/auth/drive.readonly",
+        scope: "https://www.googleapis.com/auth/spreadsheets https://www.googleapis.com/auth/drive.readonly",
         callback: ""
     });
     gInited = true;
