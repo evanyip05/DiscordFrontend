@@ -155,7 +155,7 @@
         }
         
         async function getNextOpenCellInCol(spreadsheetId, columnName) {
-            let row = 0;
+            let row = 1;
             while(true) {
                 const res = await read(spreadsheetId, ""+columnName+row);
                 if (res.error === 'noVal') {return ""+columnName+row;}    
