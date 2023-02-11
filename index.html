@@ -150,7 +150,7 @@
         // range is a single location, value is a single value
         async function append(spreadsheetId, columnName, value) {
             try {
-                console.log(getNextOpenCellInCol(spreadsheetId, columnName));
+                write(spreadsheetId, getNextOpenCellInCol(spreadsheetId, columnName), value);
             } catch (err) {console.log(err.message); return;}
         }
         
@@ -159,7 +159,7 @@
             while(true) {
                 const res = await read(spreadsheetId, columnName+":"+row);
                 console.log(res);
-                if (res.error === 'noVal') {return columnName+":"+row;}    
+                if (res.error === 'noVal') {return ""+columnName+row;}    
                 ++row;
             }
         }
