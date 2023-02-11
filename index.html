@@ -164,7 +164,7 @@
             while(!found) {
                 const res = await read(spreadsheetId, ""+columnName+row);
                 console.log(res);
-                if (res === 'undefined') {found=true;}    
+                if (typeof res === 'undefined') {found=true;}    
                 ++row;
             }
             --row;
