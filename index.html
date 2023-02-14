@@ -113,7 +113,7 @@
         const enablePushNotif = async () => {
             const currentEndPointUrl = await getCurrentEndPointUrl();  
             const tmr = Date.now()+86400000;
-            fetch("https://www.googleapis.com/drive/v3/files/"+SPREADSHEET_ID+"/watch", {method:"POST", mode:"no-cors", Authorization:"AIzaSyAOUjID5aZreP7DmXJjWL0B26Ej6JTu9LI", headers:{id:"hello!", type:"web_hook", address:currentEndPointUrl[0], expiration:tmr}})
+            fetch("https://www.googleapis.com/drive/v3/files/"+SPREADSHEET_ID+"/watch", {method:"POST", mode:"no-cors", id:"github", token:"AIzaSyAOUjID5aZreP7DmXJjWL0B26Ej6JTu9LI", type:"web_hook", address:currentEndPointUrl[0], expiration:tmr})
         }
         
         const SPREADSHEET_ID = "1gEhqSyp75XrCDH8fHwVQYD9EeXNpSTAsaN49U4brg8o";
