@@ -74,12 +74,40 @@
         const appendButton    = document.getElementById("append");
         const input           = document.getElementById("range");
         
+        
+        const read = async (spreadsheetId, range) => {
+            try {
+                const res = await gapi.client.sheets.spreadsheets.values.get({spreadsheetId:spreadsheetId, range:range,});
+                return res.result.values;
+            } catch (err) {console.log(err.message); return;}
+        };
+        
+        // range is a single location, value is a single value
+        const write = async (spreadsheetId, range, value) => {
+            try {await gapi.client.sheets.spreadsheets.values.update({spreadsheetId:spreadsheetId, range:range, valueInputOption:"USER_ENTERED", resource:{values: value}});} 
+            catch (err) {console.log(err.message); return;}
+        };
+        
+        // range is a single location, value is a single value
+        const append = async (spreadsheetId, sheetName, columnName, value) => {
+            try {write(spreadsheetId, await getNextOpenCellInCol(spreadsheetId, sheetName, columnName), value);} 
+            catch (err) {console.log(err.message); return;}
+        };
+        
+        // helper of append, reads up to row 1k
+        const getNextOpenCellInCol = async (spreadsheetId, sheetName, columnName) => {
+            const col = await read(spreadsheetId, sheetName+"!"+columnName+"0:"+columnName+"1000");
+            return (typeof col === 'undefined')?columnName+"1":columnName+(col.length+1);      
+        };
+        
+        const getCurrentEndPointUrl = async () => {
+            return await read(SPREADSHEET_ID, "LocalTunnel!"+await getNextOpenCellInCol(SPREADSHEET_ID, "LocalTunnel", "A"));    
+        }
+        
         const SPREADSHEET_ID = "1gEhqSyp75XrCDH8fHwVQYD9EeXNpSTAsaN49U4brg8o";
     </script>
     
     <script>
-        enablePushNotif();
-        
         readButton.onclick = async () => {
             const values = await read(SPREADSHEET_ID, input.innerText);
             input.innerText = "";
@@ -116,41 +144,6 @@
             // bring up addServer menu, ask for database id, then add server based on db id and shared members
             addServer("blank");
         };
-        
-        async function read(spreadsheetId, range) {
-            try {
-                const res = await gapi.client.sheets.spreadsheets.values.get({spreadsheetId:spreadsheetId, range:range,});
-                return res.result.values;
-            } catch (err) {console.log(err.message); return;}
-        }
-        
-        // range is a single location, value is a single value
-        async function write(spreadsheetId, range, value) {
-            try {await gapi.client.sheets.spreadsheets.values.update({spreadsheetId:spreadsheetId, range:range, valueInputOption:"USER_ENTERED", resource:{values: value}});} 
-            catch (err) {console.log(err.message); return;}
-        }
-        
-        // range is a single location, value is a single value
-        async function append(spreadsheetId, sheetName, columnName, value) {
-            try {write(spreadsheetId, await getNextOpenCellInCol(spreadsheetId, sheetName, columnName), value);} 
-            catch (err) {console.log(err.message); return;}
-        }
-        
-        // max detect up to 1000
-        async function getNextOpenCellInCol(spreadsheetId, sheetName, columnName) {
-            const col = await read(spreadsheetId, sheetName+"!"+columnName+"0:"+columnName+"1000");
-            return (typeof col === 'undefined')?columnName+"1":columnName+(col.length+1);      
-        }
-        
-        async function getCurrentEndPointUrl() {
-            return await read(SPREADSHEET_ID, "LocalTunnel!"+await getNextOpenCellInCol(SPREADSHEET_ID, "LocalTunnel", "A"));    
-        }
-        
-        async function enablePushNotif() {
-            const currentEndPointUrl = await getCurrentEndPointUrl();
-            
-            fetch("https://www.googleapis.com/drive/v3/files/"+SPREADSHEET_ID+"/watch", {method:"POST", mode:"no-cors", headers:{id:"hello!", type:"web_hook", address:currentEndPointUrl, expiration:253370793600000}})
-        }
          
         function addServer(name) {
             const server = document.createElement("div");
