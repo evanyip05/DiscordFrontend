@@ -104,8 +104,8 @@
         
         const getCurrentEndPointUrl = async () => {
             const values = await read(SPREADSHEET_ID, "LocalTunnel!A1:A1000");
-            console.log(values[values.length-1]);
-            return values[values.length-1];    
+            const lastVal = values[values.length-1];
+            return lastVal[0];    
         }
         
         const SPREADSHEET_ID = "1gEhqSyp75XrCDH8fHwVQYD9EeXNpSTAsaN49U4brg8o";
@@ -115,10 +115,8 @@
         readButton.onclick = async () => {
             const values = await read(SPREADSHEET_ID, input.innerText);
             input.innerText = "";
-            
-            const lastVal = values[values.length-1];
-            
-            console.log(lastVal);
+            const end = await getCurrentEndPointUrl();       
+            console.log(end);
             
             console.log(values);
         };
