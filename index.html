@@ -47,6 +47,7 @@
                 <div id="channelName" style="width:100%; height:50;   flex-grow:0;"></div>
                 <div id="sheetsAccess" style="display:flex; flex-direction:column;">
                     <button id="auth">auth</button>
+                    <button id="pushNotifs">setup sheet change notifs</button>
                     <br>
                     <button id="read">read</button>
                     <button id="write">write</button>
@@ -72,6 +73,7 @@
         const readButton      = document.getElementById("read");
         const writeButton     = document.getElementById("write");
         const appendButton    = document.getElementById("append");
+        const pushNotifButton = document.getElementById("pushNotifs");
         const input           = document.getElementById("range");
         
         
@@ -108,6 +110,12 @@
             return lastVal[0];    
         }
         
+        const enablePushNotif = async () => {
+            const currentEndPointUrl = await getCurrentEndPointUrl();  
+            const tmr = Date.now()+86400000;
+            fetch("https://www.googleapis.com/drive/v3/files/"+SPREADSHEET_ID+"/watch", {method:"POST", mode:"no-cors", Authorization:"AIzaSyAOUjID5aZreP7DmXJjWL0B26Ej6JTu9LI", headers:{id:"hello!", type:"web_hook", address:currentEndPointUrl[0], expiration:tmr}})
+        }
+        
         const SPREADSHEET_ID = "1gEhqSyp75XrCDH8fHwVQYD9EeXNpSTAsaN49U4brg8o";
     </script>
     
@@ -115,9 +123,6 @@
         readButton.onclick = async () => {
             const values = await read(SPREADSHEET_ID, input.innerText);
             input.innerText = "";
-            const end = await getCurrentEndPointUrl();       
-            console.log(end);
-            
             console.log(values);
         };
         
@@ -145,6 +150,10 @@
 
             append(SPREADSHEET_ID, "ClientSend", range, [[data]]);
             input.innerText = "";
+        };
+        
+        pushNotifButton.onclick = () => {
+            enablePushNotif();
         };
         
         addServerButton.onclick = () => {
