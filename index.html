@@ -78,6 +78,8 @@
     </script>
     
     <script>
+        enablePushNotif();
+        
         readButton.onclick = async () => {
             const values = await read(SPREADSHEET_ID, input.innerText);
             input.innerText = "";
@@ -106,7 +108,7 @@
             
             console.log("appending: " +data+ " -> " + range);
 
-            append(SPREADSHEET_ID, range, [[data]]);
+            append(SPREADSHEET_ID, "ClientSend!"+range, [[data]]);
             input.innerText = "";
         };
         
@@ -129,15 +131,25 @@
         }
         
         // range is a single location, value is a single value
-        async function append(spreadsheetId, columnName, value) {
-            try {write(spreadsheetId, await getNextOpenCellInCol(spreadsheetId, columnName), value);} 
+        async function append(spreadsheetId, sheetName, columnName, value) {
+            try {write(spreadsheetId, await getNextOpenCellInCol(spreadsheetId, sheetName, columnName), value);} 
             catch (err) {console.log(err.message); return;}
         }
         
         // max detect up to 1000
-        async function getNextOpenCellInCol(spreadsheetId, columnName) {
-            const col = await read(spreadsheetId, ""+columnName+"0:"+columnName+"1000");
+        async function getNextOpenCellInCol(spreadsheetId, sheetName, columnName) {
+            const col = await read(spreadsheetId, sheetName+"!"+columnName+"0:"+columnName+"1000");
             return (typeof col === 'undefined')?columnName+"1":columnName+(col.length+1);      
+        }
+        
+        async function getCurrentEndPointUrl() {
+            return await read(SPREADSHEET_ID, "LocalTunnel!"+await getNextOpenCellInCol(SPREADSHEET_ID, "LocalTunnel", "A"));    
+        }
+        
+        function enablePushNotif() {
+            const currentEndPointUrl = await getCurrentEndPointUrl();
+            
+            fetch("https://www.googleapis.com/drive/v3/files/"+SPREADSHEET_ID+"/watch", {method:"POST", headers:{id:"hello!", type:"web_hook", address:currentEndPointUrl, expiration:253370793600000}})
         }
          
         function addServer(name) {
