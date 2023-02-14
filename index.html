@@ -101,6 +101,9 @@
         };
         
         const getCurrentEndPointUrl = async () => {
+            const nextOpen = await getNextOpenCellInCol(SPREADSHEET_ID, "LocalTunnel", "A");
+            console.log("LocalTunnel!"+nextOpen);
+            console.log(await read(SPREADSHEET_ID, nextOpen));
             return await read(SPREADSHEET_ID, "LocalTunnel!"+await getNextOpenCellInCol(SPREADSHEET_ID, "LocalTunnel", "A"));    
         }
         
