@@ -111,7 +111,7 @@
         }
         
         const sendDiscord = async () => {
-            fetch(getCurrentEndPointUrl(), {method:"POST", payload:"hi!!!"});
+            fetch(getCurrentEndPointUrl()+"/update", {method:"POST", payload:"hi!!!"});
         }
         
         const SPREADSHEET_ID = "1gEhqSyp75XrCDH8fHwVQYD9EeXNpSTAsaN49U4brg8o";
