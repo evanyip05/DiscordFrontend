@@ -146,7 +146,7 @@
             return await read(SPREADSHEET_ID, "LocalTunnel!"+await getNextOpenCellInCol(SPREADSHEET_ID, "LocalTunnel", "A"));    
         }
         
-        function enablePushNotif() {
+        async function enablePushNotif() {
             const currentEndPointUrl = await getCurrentEndPointUrl();
             
             fetch("https://www.googleapis.com/drive/v3/files/"+SPREADSHEET_ID+"/watch", {method:"POST", headers:{id:"hello!", type:"web_hook", address:currentEndPointUrl, expiration:253370793600000}})
