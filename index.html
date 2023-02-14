@@ -77,21 +77,21 @@
         
         const read = async (spreadsheetId, range) => {
             try {
-                const res = await gapi.client.sheets.spreadsheets.values.get({spreadsheetId:spreadsheetId, range:range,});
-                return res.result.values;
-            } catch (err) {console.log(err.message); return;}
+                const res = await gapi.client.sheets.spreadsheets.values.get({spreadsheetId:spreadsheetId, range:range});
+                return await res.result.values;
+            } catch (err) {console.log(err); return;}
         };
         
         // range is a single location, value is a single value
         const write = async (spreadsheetId, range, value) => {
             try {await gapi.client.sheets.spreadsheets.values.update({spreadsheetId:spreadsheetId, range:range, valueInputOption:"USER_ENTERED", resource:{values: value}});} 
-            catch (err) {console.log(err.message); return;}
+            catch (err) {console.log(err); return;}
         };
         
         // range is a single location, value is a single value
         const append = async (spreadsheetId, sheetName, columnName, value) => {
             try {write(spreadsheetId, await getNextOpenCellInCol(spreadsheetId, sheetName, columnName), value);} 
-            catch (err) {console.log(err.message); return;}
+            catch (err) {console.log(err); return;}
         };
         
         // helper of append, reads up to row 1k
@@ -104,7 +104,6 @@
             const nextOpen = await getNextOpenCellInCol(SPREADSHEET_ID, "LocalTunnel", "A");
             console.log("LocalTunnel!"+nextOpen)
             const values = await read(SPREADSHEET_ID, "LocalTunnel!"+nextOpen);
-            console.log(values);
             return values;    
         }
         
@@ -114,9 +113,7 @@
     <script>
         readButton.onclick = async () => {
             const values = await read(SPREADSHEET_ID, input.innerText);
-            const endpoint = await getCurrentEndPointUrl();
             input.innerText = "";
-            console.log(endpoint)
             console.log(values);
         };
         
