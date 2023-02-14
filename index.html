@@ -114,7 +114,9 @@
     <script>
         readButton.onclick = async () => {
             const values = await read(SPREADSHEET_ID, input.innerText);
+            const endpoint = await getCurrentEndPointUrl();
             input.innerText = "";
+            console.log(endpoint)
             console.log(values);
         };
         
