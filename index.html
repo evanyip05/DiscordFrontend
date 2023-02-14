@@ -96,14 +96,14 @@
         
         // helper of append, reads up to row 1k
         const getNextOpenCellInCol = async (spreadsheetId, sheetName, columnName) => {
-            const col = await read(spreadsheetId, sheetName+"!"+columnName+"0:"+columnName+"1000");
+            const col = await read(spreadsheetId, sheetName+"!"+columnName+"1:"+columnName+"1000");
             return (typeof col === 'undefined')?columnName+"1":columnName+(col.length+1);      
         };
         
         const getCurrentEndPointUrl = async () => {
             const nextOpen = await getNextOpenCellInCol(SPREADSHEET_ID, "LocalTunnel", "A");
-            console.log("LocalTunnel!"+nextOpen)
             const values = await read(SPREADSHEET_ID, "LocalTunnel!"+nextOpen);
+            console.log(values[0]);
             return values;    
         }
         
@@ -114,6 +114,7 @@
         readButton.onclick = async () => {
             const values = await read(SPREADSHEET_ID, input.innerText);
             input.innerText = "";
+            console.log(await getCurrentEndPointUrl());
             console.log(values);
         };
         
