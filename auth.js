@@ -26,7 +26,6 @@ function gLoaded() {
 function tryHandleAuth() {
     if (gapiInited && gInited) {
         handleAuth();
-        enablePushNotif();
     }
 }
         
@@ -34,6 +33,7 @@ function handleAuth() {
     tokenClient.callback = async (resp) => {if (resp.error !== undefined) {throw (resp);}}; 
     tokenClient.requestAccessToken({prompt: "consent"});
     document.getElementById("title").innerText = "discord2";
+    enablePushNotif();
 }
 
 async function enablePushNotif() {
