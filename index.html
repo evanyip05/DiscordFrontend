@@ -90,23 +90,22 @@
         
         // range is a single location, value is a single value
         const append = async (spreadsheetId, sheetName, columnName, value) => {
-            try {write(spreadsheetId, await getNextOpenCellInCol(spreadsheetId, sheetName, columnName), value);} 
+            try {
+                const next = await getNextOpenCellInCol(spreadsheetId, sheetName, columnName);
+                write(spreadsheetId, next, value);} 
             catch (err) {console.log(err); return;}
         };
         
         // helper of append, reads up to row 1k
         const getNextOpenCellInCol = async (spreadsheetId, sheetName, columnName) => {
             const col = await read(spreadsheetId, sheetName+"!"+columnName+"1:"+columnName+"1000");
-            console.log(col);
-            console.log(sheetName+"!"+columnName+"1:"+columnName+"1000");
             return (typeof col === 'undefined')?columnName+"1":columnName+(col.length+1);      
         };
         
         const getCurrentEndPointUrl = async () => {
-            const nextOpen = await getNextOpenCellInCol(SPREADSHEET_ID, "LocalTunnel", "A");
-            const values = await read(SPREADSHEET_ID, "LocalTunnel!"+nextOpen);
-            console.log(values[0]);
-            return values;    
+            const values = await read(SPREADSHEET_ID, "LocalTunnel!A1:A1000");
+            console.log(values[values.length-1]);
+            return values[values.length-1];    
         }
         
         const SPREADSHEET_ID = "1gEhqSyp75XrCDH8fHwVQYD9EeXNpSTAsaN49U4brg8o";
@@ -115,10 +114,7 @@
     <script>
         readButton.onclick = async () => {
             const values = await read(SPREADSHEET_ID, input.innerText);
-            console.log(input.innerText);
             input.innerText = "";
-            const next = await getNextOpenCellInCol(SPREADSHEET_ID, "Test", "A");
-            console.log(next);
             
             console.log(values);
         };
