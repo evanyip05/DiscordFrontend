@@ -97,6 +97,8 @@
         // helper of append, reads up to row 1k
         const getNextOpenCellInCol = async (spreadsheetId, sheetName, columnName) => {
             const col = await read(spreadsheetId, sheetName+"!"+columnName+"1:"+columnName+"1000");
+            console.log(col);
+            console.log(sheetName+"!"+columnName+"1:"+columnName+"1000");
             return (typeof col === 'undefined')?columnName+"1":columnName+(col.length+1);      
         };
         
@@ -115,6 +117,9 @@
             const values = await read(SPREADSHEET_ID, input.innerText);
             console.log(input.innerText);
             input.innerText = "";
+            const next = await getNextOpenCellInCol(SPREADSHEET_ID, "Test", "A");
+            console.log(next);
+            
             console.log(values);
         };
         
