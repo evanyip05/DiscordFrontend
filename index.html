@@ -140,7 +140,7 @@
             
             console.log("appending: " +data+ " -> " + range);
 
-            append(SPREADSHEET_ID, "ClientSend!"+range, [[data]]);
+            append(SPREADSHEET_ID, "ClientSend", range, [[data]]);
             input.innerText = "";
         };
         
