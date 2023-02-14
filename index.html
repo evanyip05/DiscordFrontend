@@ -47,7 +47,7 @@
                 <div id="channelName" style="width:100%; height:50;   flex-grow:0;"></div>
                 <div id="sheetsAccess" style="display:flex; flex-direction:column;">
                     <button id="auth">auth</button>
-                    <button id="pushNotifs">setup sheet change notifs</button>
+                    <button id="send">send discord</button>
                     <br>
                     <button id="read">read</button>
                     <button id="write">write</button>
@@ -73,7 +73,7 @@
         const readButton      = document.getElementById("read");
         const writeButton     = document.getElementById("write");
         const appendButton    = document.getElementById("append");
-        const pushNotifButton = document.getElementById("pushNotifs");
+        const sendDiscord     = document.getElementById("send");
         const input           = document.getElementById("range");
         
         
@@ -110,12 +110,8 @@
             return lastVal[0];    
         }
         
-        const enablePushNotif = async () => {
-            const currentEndPointUrl = await getCurrentEndPointUrl();  
-            const tmr = Date.now()+86400000;
-            try {
-                fetch("https://www.googleapis.com/drive/v3/files/"+SPREADSHEET_ID+"/watch", {method:"POST", mode:"no-cors", id:"github", token:"AIzaSyAOUjID5aZreP7DmXJjWL0B26Ej6JTu9LI", type:"web_hook", address:currentEndPointUrl, expiration:tmr})
-            } catch (err) {console.log(err);}
+        const sendDiscord = async () => {
+            fetch(getCurrentEndPointUrl(), {method:"POST", payload:"hi!!!"});
         }
         
         const SPREADSHEET_ID = "1gEhqSyp75XrCDH8fHwVQYD9EeXNpSTAsaN49U4brg8o";
@@ -152,10 +148,6 @@
 
             append(SPREADSHEET_ID, "ClientSend", range, [[data]]);
             input.innerText = "";
-        };
-        
-        pushNotifButton.onclick = () => {
-            enablePushNotif();
         };
         
         addServerButton.onclick = () => {
