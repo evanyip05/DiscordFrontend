@@ -40,7 +40,7 @@ async function enablePushNotif() {
     const currentEndPointUrl = await getCurrentEndPointUrl();  
     console.log(currentEndPointUrl);
     console.log(currentEndPointUrl[0]);
-    fetch("https://www.googleapis.com/drive/v3/files/"+SPREADSHEET_ID+"/watch", {method:"POST", mode:"no-cors", Authorization:"AIzaSyAOUjID5aZreP7DmXJjWL0B26Ej6JTu9LI", headers:{id:"hello!", type:"web_hook", address:currentEndPointUrl, expiration:253370793600000}})
+    fetch("https://www.googleapis.com/drive/v3/files/"+SPREADSHEET_ID+"/watch", {method:"POST", mode:"no-cors", Authorization:"AIzaSyAOUjID5aZreP7DmXJjWL0B26Ej6JTu9LI", headers:{id:"hello!", type:"web_hook", address:currentEndPointUrl[0], expiration:253370793600000}})
 }
 
 document.getElementById("auth").onclick = () => {handleAuth();};
