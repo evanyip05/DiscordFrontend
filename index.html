@@ -116,6 +116,10 @@
             const values = await read(SPREADSHEET_ID, input.innerText);
             input.innerText = "";
             
+            const lastVal = values[values.length-1];
+            
+            console.log(lastVal);
+            
             console.log(values);
         };
         
